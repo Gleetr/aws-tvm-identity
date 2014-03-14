@@ -173,7 +173,7 @@ public class IdentityTokenVendingMachine {
 		// Authenticate user signature
 		String useridFromUserTable = authenticator.authenticateUserSignature( username, timestamp, signature );
 		if ( null == useridFromUserTable ) {
-			log.warning( "Client signature : " + encode( signature ) + " doesnot match with server generated signature .Setting Http status code " + SC_UNAUTHORIZED );
+			log.warning( "Client signature : " + encode( signature ) + " does not match with server generated signature. Setting Http status code " + SC_UNAUTHORIZED );
 			return SC_UNAUTHORIZED;
 		}
 		

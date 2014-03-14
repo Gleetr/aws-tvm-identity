@@ -31,7 +31,7 @@ import com.amazonaws.tvm.Utilities;
 public class LoginServlet extends RootServlet {
 	
 	protected String processRequest( HttpServletRequest request, HttpServletResponse response ) throws Exception {
-		log.info( "entering processRequest" );
+		// log.info( "entering processRequest" );
 		try {
 			
 			IdentityTokenVendingMachine identityTokenVendingMachine = new IdentityTokenVendingMachine();
@@ -67,7 +67,7 @@ public class LoginServlet extends RootServlet {
 			super.sendOKResponse( response, data );
 		}
 		finally {
-			log.info( "leaving processRequest" );
+			// log.info( "leaving processRequest" );
 		}
 		
 		return null;

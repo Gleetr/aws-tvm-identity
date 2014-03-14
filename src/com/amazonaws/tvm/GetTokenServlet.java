@@ -29,7 +29,7 @@ public class GetTokenServlet extends RootServlet {
 	
 	@Override
 	protected String processRequest( HttpServletRequest request, HttpServletResponse response ) throws Exception {
-		log.info( "processing request" );
+		// log.info( "processing request" );
 		try {
 			
 			IdentityTokenVendingMachine identityTokenVendingMachine = new IdentityTokenVendingMachine(); 
@@ -56,7 +56,7 @@ public class GetTokenServlet extends RootServlet {
 			super.sendOKResponse( response, data );
 		}
 		finally {
-			log.info( "leaving processRequest" );
+			// log.info( "leaving processRequest" );
 		}
 		
 		return null;

@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
 
 /**
  * Utility used to enable logging for applications launched in AWS Elastic BeanStalk.
@@ -43,7 +42,7 @@ public class TokenVendingMachineLogger {
 		try {
 			handler = new FileHandler( "MyLogFile.txt", true );
 			
-			SimpleFormatter formatter = new SimpleFormatter();
+			SimpleLogFormatter formatter = new SimpleLogFormatter();
 			handler.setFormatter( formatter );
 			
 			logger.addHandler( handler );

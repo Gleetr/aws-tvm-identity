@@ -38,6 +38,9 @@ public class GetTokenServlet extends RootServlet {
 			String signature = super.getRequiredParameter( request, "signature" );
 			String timestamp = super.getRequiredParameter( request, "timestamp" );
 			
+			// DEBUG
+			log.info("[uid : '" + encode(uid) + "', sig : '" + encode(signature) + "', tstamp : " + encode(timestamp) + "']");
+
 			int responseCode = identityTokenVendingMachine.validateTokenRequest( uid, signature, timestamp );
 			if ( responseCode != HttpServletResponse.SC_OK ) {
 				log.severe( "Error validating token request for UID : " + encode( uid ) );

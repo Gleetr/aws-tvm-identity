@@ -43,10 +43,9 @@ public class LoginServlet extends RootServlet {
 			
 			String endpoint = Utilities.getEndPoint( request );
 			
-			log.info( "username : " + encode( username ) );
-			log.info( "timestamp : " + encode( timestamp ) );
-			log.info( "uid : " + encode( uid ) );
-			log.info( "endpoint : " + encode( endpoint ) );
+			// DEBUG
+			log.info("[username : '" + encode(username) + "', tstamp : '" + encode(timestamp) + 
+					"', uid : '" + encode(uid) + "', endpoint : '" + encode(endpoint) + "']");
 			
 			int responseCode = identityTokenVendingMachine.validateLoginRequest( username, uid, signature, timestamp );
 			

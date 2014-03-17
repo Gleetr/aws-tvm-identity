@@ -95,7 +95,10 @@ public class IdentityTokenVendingMachine {
             log.severe( "Username not found for: " + username );            
             return null;
         }
-                
+
+        // DEBUG
+        log.info("Matched UID '" + uid + "' with username '" + username + '\'');
+
 		Credentials sessionCredentials = TemporaryCredentialManagement.getTemporaryCredentials( username );
 		// if unable to create session credentials then return HTTP 500 error code
 		if ( sessionCredentials == null ) {

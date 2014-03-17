@@ -17,6 +17,7 @@ package com.amazonaws.tvm;
 
 import java.security.AlgorithmParameters;
 import java.security.SecureRandom;
+import java.util.Arrays;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
@@ -56,6 +57,10 @@ public class AESEncryption {
 		byte[] iv = new byte[ 16 ];
 		new SecureRandom().nextBytes( iv );
 		
+		// DEBUG
+		Utilities.log.info("IV = " + Arrays.toString(iv));
+		Utilities.log.info("IV as String = " + new String(iv));
+
 		return iv;
 	}
 }

@@ -51,6 +51,9 @@ public class Utilities {
 		responseBody.append( "\texpirationDate: \"" ).append( sessionCredentials.getExpiration().getTime() ).append( "\"" );
 		responseBody.append( "}" );
 		
+		// DEBUG
+		log.info("JSON response before encrypting : " + responseBody.toString());
+
 		// Encrypting the response
 		return AESEncryption.wrap( responseBody.toString(), key );
 	}

@@ -113,15 +113,8 @@ public class Utilities {
 		if ( null == timestamp ) {
 			return false;
 		}
-		
-		try {
-			timestampLong = new DateUtils().parseIso8601Date( timestamp ).getTime();
-		}
-		catch ( ParseException exception ) {
-			log.warning( "Error parsing timestamp sent from client : " + encode( timestamp ) );
-			return false;
-		}
-		
+
+		timestampLong = DateUtils.parseISO8601Date( timestamp ).getTime();
 		Long now = new Date().getTime();
 		
 		long before15Mins = new Date( now - window ).getTime();

@@ -1,6 +1,5 @@
 package com.amazonaws.tvm.services.rest;
 
-import com.amazonaws.tvm.custom.UserAuthentication;
 import com.amazonaws.tvm.domain.User;
 import com.amazonaws.tvm.services.dao.UserService;
 import com.amazonaws.tvm.services.dao.UserSimpleDBService;
@@ -18,29 +17,26 @@ import java.util.List;
 @Path("/user")
 public class UserResource {
 
-    private UserAuthentication userAuthentication;
     private UserService userService;
 
     public UserResource() {
         this.userService = new UserSimpleDBService();
-        // this.userAuthentication = new UserAuthentication();
     }
 
     @GET
     @Path("/list")
     @Produces(MediaType.APPLICATION_JSON)
     public List<User> list() {
-        // List<String> users = this.userAuthentication.listUsers();
         List<User> users = this.userService.list();
-
         return users;
     }
 
     @GET
     @Path("/id/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String findById(@PathParam("id") Long id) {
-        return "test";
+    public User findById(@PathParam("id") String id) {
+        User user = this.userService.findById(id);
+        return user;
     }
 
 }

@@ -2,10 +2,7 @@ package com.amazonaws.tvm.services.dao;
 
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.simpledb.AmazonSimpleDBClient;
-import com.amazonaws.services.simpledb.model.Attribute;
-import com.amazonaws.services.simpledb.model.Item;
-import com.amazonaws.services.simpledb.model.SelectRequest;
-import com.amazonaws.services.simpledb.model.SelectResult;
+import com.amazonaws.services.simpledb.model.*;
 import com.amazonaws.tvm.Configuration;
 import com.amazonaws.tvm.domain.User;
 
@@ -134,6 +131,12 @@ public class UserSimpleDBService implements UserService {
 
         User result = new User(userId, hashedPassword, enabled);
         return result;
+    }
+
+    @Override
+    public void deleteById(String id) {
+        DeleteAttributesRequest deleteRequest = new DeleteAttributesRequest(IDENTITY_DOMAIN, id);
+        this.sdb.deleteAttributes(deleteRequest);
     }
 
 }

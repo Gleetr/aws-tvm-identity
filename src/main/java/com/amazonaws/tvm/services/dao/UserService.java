@@ -13,4 +13,6 @@ public interface UserService {
 
     public User findById(String id);
 
+    public void deleteById(String id);
+
 }

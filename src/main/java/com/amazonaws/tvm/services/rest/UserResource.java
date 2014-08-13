@@ -61,4 +61,12 @@ public class UserResource {
         this.userService.add(userRequested, endpoint);
     }
 
+    @GET
+    @Path("/count-devices")
+    @Produces(MediaType.TEXT_PLAIN)
+    public Long countDevices() {
+        Long devicesCount = this.userService.countDevices();
+        return devicesCount;
+    }
+
 }

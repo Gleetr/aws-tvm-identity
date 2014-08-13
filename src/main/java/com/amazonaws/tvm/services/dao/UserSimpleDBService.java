@@ -39,6 +39,11 @@ public class UserSimpleDBService implements UserService {
     private final static String IS_ENABLED = "enabled";
 
     /**
+     * Constant for the Count attribute.
+     */
+    private final static String COUNT = "Count";
+
+    /**
      * Constant select expression used to list all the identities stored in the Domain.
      */
     private final static String SELECT_USERS_EXPRESSION = "select * from `" + IDENTITY_DOMAIN + "`";
@@ -195,6 +200,25 @@ public class UserSimpleDBService implements UserService {
 
         PutAttributesRequest par = new PutAttributesRequest(IDENTITY_DOMAIN, userRequested.getName(), attributes);
         this.sdb.putAttributes(par);
+    }
+
+    @Override
+    public Long countDevices() {
+        SelectRequest sr = new SelectRequest("select count(*) from `" + IDENTITY_DOMAIN + "`", Boolean.TRUE);
+        SelectResult result = this.sdb.select(sr);
+
+        List<Item> resultItems = result.getItems();
+        for (Item currItem : resultItems) {
+            System.out.println(currItem);
+            for (Attribute currAttribute : currItem.getAttributes()) {
+                if (COUNT.equals(currAttribute.getName())) {
+                    return Long.valueOf(currAttribute.getValue());
+                }
+            }
+        }
+
+        // if we cannot determine the count, return -1
+        return -1L;
     }
 
 }

@@ -38,6 +38,10 @@ curl http://admin:admin@localhost:8080/management/user/name/pierre
 curl http://admin:admin@localhost:8080/management/user/id/24f26695ecb6d15fb48ef8eed9fd8154
 {"id":"24f26695ecb6d15fb48ef8eed9fd8154","name":"nicolas","enabled":true}
 
+### Count Devices
+curl http://admin:admin@localhost:8080/management/user/count-devices
+2
+
 ### TODO
 Remaining operations?
 

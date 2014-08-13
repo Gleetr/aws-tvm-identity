@@ -20,6 +20,6 @@ public interface UserService {
 
     public void add(UserCreationRequest user, String endpoint);
 
-    public Long countDevices();
+    public Long count();
 
 }

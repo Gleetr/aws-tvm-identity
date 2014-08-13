@@ -62,11 +62,11 @@ public class UserResource {
     }
 
     @GET
-    @Path("/count-devices")
+    @Path("/count")
     @Produces(MediaType.TEXT_PLAIN)
-    public Long countDevices() {
-        Long devicesCount = this.userService.countDevices();
-        return devicesCount;
+    public Long count() {
+        Long count = this.userService.count();
+        return count;
     }
 
 }

@@ -203,7 +203,7 @@ public class UserSimpleDBService implements UserService {
     }
 
     @Override
-    public Long countDevices() {
+    public Long count() {
         SelectRequest sr = new SelectRequest("select count(*) from `" + IDENTITY_DOMAIN + "`", Boolean.TRUE);
         SelectResult result = this.sdb.select(sr);
 

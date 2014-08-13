@@ -14,6 +14,8 @@ public interface UserService {
 
     public User findById(String id);
 
+    public User findByName(String name);
+
     public void deleteById(String id);
 
     public void add(UserCreationRequest user, String endpoint);

@@ -40,6 +40,14 @@ public class UserResource {
         return user;
     }
 
+    @GET
+    @Path("/name/{name}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public User findByName(@PathParam("name") String name) {
+        User user = this.userService.findByName(name);
+        return user;
+    }
+
     @DELETE
     @Path("/id/{id}")
     public void delete(@PathParam("id") String id) {

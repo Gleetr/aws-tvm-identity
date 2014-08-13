@@ -43,11 +43,15 @@ public class UserSimpleDBService implements UserService {
      */
     private final static String SELECT_USERS_EXPRESSION = "select * from `" + IDENTITY_DOMAIN + "`";
 
+    /**
+     * Constant select expression used to list a specific identity by UserID attribute stored in the Domain.
+     */
+    private final static String SELECT_USER_BY_ID_EXPRESSION_PREFIX = "select * from `" + IDENTITY_DOMAIN + "` where " + USER_ID + "=";
 
     /**
-     * Constant select expression used to list a specific identity stored in the Domain.
+     * Constant select expression used to list a specific identity by ItemName stored in the Domain.
      */
-    private final static String SELECT_USER_EXPRESSION_PREFIX = "select * from `" + IDENTITY_DOMAIN + "` where " + USER_ID + "=";
+    private final static String SELECT_USER_BY_NAME_EXPRESSION_PREFIX = "select * from `" + IDENTITY_DOMAIN + "` where itemName()=";
 
     public UserSimpleDBService() {
         this.sdb = new AmazonSimpleDBClient(new BasicAWSCredentials(Configuration.AWS_ACCESS_KEY_ID, Configuration.AWS_SECRET_KEY));
@@ -87,12 +91,42 @@ public class UserSimpleDBService implements UserService {
 
     @Override
     public User findById(String id) {
-        // FIXME doesn't work, the SDB query always returns an empty set (the AWS code uses a select * then filters on the Java side)
         List<User> users = new ArrayList<User>();
         SelectResult result = null;
 
         do {
-            String query = SELECT_USER_EXPRESSION_PREFIX + '\'' + id + '\'';
+            String query = SELECT_USER_BY_ID_EXPRESSION_PREFIX + '\'' + id + '\'';
+            SelectRequest sr = new SelectRequest(query, Boolean.TRUE);
+            result = this.sdb.select(sr);
+
+            for (Item item : result.getItems()) {
+                User currUser = fillUserFromSimpleDBAttrs(item);
+                users.add(currUser);
+            }
+
+        } while (result != null && result.getNextToken() != null);
+
+        // return the found user, or check for errors
+        if (users.size() == 1) {
+            return users.get(0);
+
+        } else if (users.isEmpty()) {
+            return null;
+
+        } else {
+            // warn if the userid is not unique - should never happen
+            // TODO add a warning if the userid is not unique?
+            return null;
+        }
+    }
+
+    @Override
+    public User findByName(String name) {
+        List<User> users = new ArrayList<User>();
+        SelectResult result = null;
+
+        do {
+            String query = SELECT_USER_BY_NAME_EXPRESSION_PREFIX + '\'' + name + '\'';
             SelectRequest sr = new SelectRequest(query, Boolean.TRUE);
             result = this.sdb.select(sr);
 

@@ -32,7 +32,7 @@ curl -XDELETE http://localhost:8080/management/user/id/nicolas
 
 ### Fetch a User by Name
 curl http://admin:admin@localhost:8080/management/user/name/pierre
-
+{"id":"ea89229f9b03883cb604d1d3555461ab","name":"pierre","enabled":true}
 
 ### Fetch a User by ID
 curl http://admin:admin@localhost:8080/management/user/id/24f26695ecb6d15fb48ef8eed9fd8154

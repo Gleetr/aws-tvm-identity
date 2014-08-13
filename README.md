@@ -13,9 +13,10 @@ please visit:
 ## What we changed
 This is the base for the version we run at Gleetr, with the following changes:
 
-  * Everything is backward-compatible, and we reused nearly the whole original Amazon TVM code
+  * Everything is 100% backward-compatible, and we reused nearly the whole original Amazon TVM code for the token exchange part
   * We added a REST API to do CRUD operations on users
   * We added a security layer to avoid leaving the admin operations open to anyone
+  * We used Maven instead of the custom ANT code
 
 ## REST API
 Gentle reminder: use SSL. Please.

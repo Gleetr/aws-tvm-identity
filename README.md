@@ -21,26 +21,26 @@ This is the base for the version we run at Gleetr, with the following changes:
 Gentle reminder: use SSL. Please.
 
 ### List All Users
-$ curl http://localhost:8080/management/user/list
- [{"id":"24f26695ecb6d15fb48ef8eed9fd8154","name":"nicolas","enabled":true},{"id":"ea89229f9b03883cb604d1d3555461ab","name":"pierre","enabled":true}]
+	$ curl http://localhost:8080/management/user/list
+	[{"id":"24f26695ecb6d15fb48ef8eed9fd8154","name":"nicolas","enabled":true},{"id":"ea89229f9b03883cb604d1d3555461ab","name":"pierre","enabled":true}]`
 
 ### Create a User
-curl -XPOST -H "Content-Type: application/json" http://localhost:8080/management/user -d '{"name":"pierre","password":"mypass","enabled":true}'
+	$ curl -XPOST -H "Content-Type: application/json" http://localhost:8080/management/user -d 	'{"name":"pierre","password":"mypass","enabled":true}'
 
 ### Delete a User
-curl -XDELETE http://localhost:8080/management/user/id/nicolas
+	$ curl -XDELETE http://localhost:8080/management/user/id/nicolas
 
 ### Fetch a User by Name
-curl http://admin:admin@localhost:8080/management/user/name/pierre
-{"id":"ea89229f9b03883cb604d1d3555461ab","name":"pierre","enabled":true}
+	$ curl http://admin:admin@localhost:8080/management/user/name/pierre
+	{"id":"ea89229f9b03883cb604d1d3555461ab","name":"pierre","enabled":true}
 
 ### Fetch a User by ID
-curl http://admin:admin@localhost:8080/management/user/id/24f26695ecb6d15fb48ef8eed9fd8154
-{"id":"24f26695ecb6d15fb48ef8eed9fd8154","name":"nicolas","enabled":true}
+	$ curl http://admin:admin@localhost:8080/management/user/id/24f26695ecb6d15fb48ef8eed9fd8154
+	{"id":"24f26695ecb6d15fb48ef8eed9fd8154","name":"nicolas","enabled":true}
 
 ### Count Devices
-curl http://admin:admin@localhost:8080/management/user/count-devices
-2
+	$ curl http://admin:admin@localhost:8080/management/user/count-devices
+	2
 
 ### TODO
 Remaining operations?

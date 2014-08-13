@@ -46,5 +46,5 @@ Gentle reminder: use SSL. Please.
 Remaining operations?
 
 - Enable/disable an user
-curl http://admin:admin@localhost:8080/management/user/id/24f26695ecb6d15fb48ef8eed9fd8154/_enable
-curl http://admin:admin@localhost:8080/management/user/name/pierre/_disable
+    curl http://admin:admin@localhost:8080/management/user/id/24f26695ecb6d15fb48ef8eed9fd8154/_enable
+    curl http://admin:admin@localhost:8080/management/user/name/pierre/_disable

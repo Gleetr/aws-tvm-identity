@@ -1,6 +1,7 @@
 package com.amazonaws.tvm.services.dao;
 
 import com.amazonaws.tvm.domain.User;
+import com.amazonaws.tvm.domain.UserCreationRequest;
 
 import java.util.List;
 
@@ -14,5 +15,7 @@ public interface UserService {
     public User findById(String id);
 
     public void deleteById(String id);
+
+    public void add(UserCreationRequest user, String endpoint);
 
 }

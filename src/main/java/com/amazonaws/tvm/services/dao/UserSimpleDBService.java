@@ -4,7 +4,9 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.simpledb.AmazonSimpleDBClient;
 import com.amazonaws.services.simpledb.model.*;
 import com.amazonaws.tvm.Configuration;
+import com.amazonaws.tvm.Utilities;
 import com.amazonaws.tvm.domain.User;
+import com.amazonaws.tvm.domain.UserCreationRequest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -116,12 +118,16 @@ public class UserSimpleDBService implements UserService {
     }
 
     private static User fillUserFromSimpleDBAttrs(Item userItem) {
-        String userId = userItem.getName();
+        String userName = userItem.getName();
+        String userId = null;
         String hashedPassword = null;
         Boolean enabled = null;
 
         for (Attribute currAttribute : userItem.getAttributes()) {
-            if (HASH_SALTED_PASSWORD.equals(currAttribute.getName())) {
+            if (USER_ID.equals(currAttribute.getName())) {
+                userId = currAttribute.getValue();
+
+            } else if (HASH_SALTED_PASSWORD.equals(currAttribute.getName())) {
                 hashedPassword = currAttribute.getValue();
 
             } else if (IS_ENABLED.equals(currAttribute.getName())) {
@@ -129,7 +135,7 @@ public class UserSimpleDBService implements UserService {
             }
         }
 
-        User result = new User(userId, hashedPassword, enabled);
+        User result = new User(userId, userName, hashedPassword, enabled);
         return result;
     }
 
@@ -137,6 +143,24 @@ public class UserSimpleDBService implements UserService {
     public void deleteById(String id) {
         DeleteAttributesRequest deleteRequest = new DeleteAttributesRequest(IDENTITY_DOMAIN, id);
         this.sdb.deleteAttributes(deleteRequest);
+    }
+
+    @Override
+    public void add(UserCreationRequest userRequested, String endpoint) {
+        String hashedSaltedPassword = Utilities.getSaltedPassword(userRequested.getName(), endpoint, userRequested.getPassword());
+        String userId = Utilities.generateRandomString();
+
+        ReplaceableAttribute userIdAttr = new ReplaceableAttribute(USER_ID, userId, Boolean.TRUE);
+        ReplaceableAttribute passwordAttr = new ReplaceableAttribute(HASH_SALTED_PASSWORD, hashedSaltedPassword, Boolean.TRUE);
+        ReplaceableAttribute enableAttr = new ReplaceableAttribute(IS_ENABLED, "" + userRequested.isEnabled(), Boolean.TRUE);
+
+        List<ReplaceableAttribute> attributes = new ArrayList<ReplaceableAttribute>(3);
+        attributes.add(userIdAttr);
+        attributes.add(passwordAttr);
+        attributes.add(enableAttr);
+
+        PutAttributesRequest par = new PutAttributesRequest(IDENTITY_DOMAIN, userRequested.getName(), attributes);
+        this.sdb.putAttributes(par);
     }
 
 }

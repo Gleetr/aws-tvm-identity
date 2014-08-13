@@ -8,17 +8,27 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class User {
 
     private String id;
+    private String name;
     private String hashedPassword;
     private boolean enabled;
 
-    public User(String id, String hashedPassword, boolean enabled) {
+    public User() {
+        // for Jackson
+    }
+
+    public User(String id, String name, String hashedPassword, boolean enabled) {
         this.id = id;
+        this.name = name;
         this.hashedPassword = hashedPassword;
         this.enabled = enabled;
     }
 
     public String getId() {
         return id;
+    }
+
+    public String getName() {
+        return name;
     }
 
     @JsonIgnore

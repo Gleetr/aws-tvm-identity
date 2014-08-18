@@ -58,8 +58,8 @@ Gentle reminder: use SSL. Please.
 	$ curl http://admin:admin@localhost:8080/management/user/id/24f26695ecb6d15fb48ef8eed9fd8154
 	{"id":"24f26695ecb6d15fb48ef8eed9fd8154","name":"nicolas","enabled":true}
 
-### Count Devices
-	$ curl http://admin:admin@localhost:8080/management/user/count-devices
+### Count Users
+	$ curl http://admin:admin@localhost:8080/management/user/count
 	2
 
 ### TODO

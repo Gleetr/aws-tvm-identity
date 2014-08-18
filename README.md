@@ -41,14 +41,14 @@ Either use Amazon Beanstalk as explained in the provided original links, or you 
 Gentle reminder: use SSL. Please.
 
 ### List All Users
-	$ curl http://localhost:8080/management/user/list
+	$ curl http://admin:admin@localhost:8080/management/user/list
 	[{"id":"24f26695ecb6d15fb48ef8eed9fd8154","name":"nicolas","enabled":true},{"id":"ea89229f9b03883cb604d1d3555461ab","name":"pierre","enabled":true}]`
 
 ### Create a User
-	$ curl -XPOST -H "Content-Type: application/json" http://localhost:8080/management/user -d 	'{"name":"pierre","password":"mypass","enabled":true}'
+	$ curl -XPOST -H "Content-Type: application/json" http://admin:admin@localhost:8080/management/user -d 	'{"name":"pierre","password":"mypass","enabled":true}'
 
 ### Delete a User
-	$ curl -XDELETE http://localhost:8080/management/user/id/nicolas
+	$ curl -XDELETE http://admin:admin@localhost:8080/management/user/id/nicolas
 
 ### Fetch a User by Name
 	$ curl http://admin:admin@localhost:8080/management/user/name/pierre

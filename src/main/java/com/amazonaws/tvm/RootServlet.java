@@ -98,7 +98,10 @@ public abstract class RootServlet extends HttpServlet {
 			response.setStatus( httpResponseCode );
 			response.setContentType( "text/plain; charset=UTF-8" );
 			response.setDateHeader( "Expires", System.currentTimeMillis() );
-			
+
+            // FIXME for now, allow everyone to call it
+            response.setHeader("Access-Control-Allow-Origin", "*");
+
 			out = response.getOutputStream();
 			out.println( Constants.getMsg( httpResponseCode )+"" );
 			

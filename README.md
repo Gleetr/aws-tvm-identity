@@ -40,6 +40,10 @@ Either use Amazon Beanstalk as explained in the provided original links, or you 
 ## REST API
 Gentle reminder: use SSL. Please.
 
+WARNING: you absolutely need to use the fully qualified server name you used in the clients to call the REST API. In the following examples, we'll be using
+localhost for easy copy/paste but this will result in the passwords being hashed using 'localhost' in the seed... And when you'll run this in production,
+authentication won't work with the users you created using this method. So please understand this.
+
 ### List All Users
 	$ curl http://admin:admin@localhost:8080/management/user/list
 	[{"id":"24f26695ecb6d15fb48ef8eed9fd8154","name":"nicolas","enabled":true},{"id":"ea89229f9b03883cb604d1d3555461ab","name":"pierre","enabled":true}]`

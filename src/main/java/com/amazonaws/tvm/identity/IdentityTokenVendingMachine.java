@@ -15,24 +15,19 @@
 
 package com.amazonaws.tvm.identity;
 
-import static com.amazonaws.tvm.Utilities.encode;
-import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
-import static javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
-import static javax.servlet.http.HttpServletResponse.SC_NOT_ACCEPTABLE;
-import static javax.servlet.http.HttpServletResponse.SC_OK;
-import static javax.servlet.http.HttpServletResponse.SC_REQUEST_TIMEOUT;
-import static javax.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
-
-import java.io.UnsupportedEncodingException;
-import java.util.Map;
-import java.util.logging.Logger;
-
 import com.amazonaws.services.securitytoken.model.Credentials;
 import com.amazonaws.tvm.TemporaryCredentialManagement;
-import com.amazonaws.tvm.TokenVendingMachineLogger;
 import com.amazonaws.tvm.Utilities;
 import com.amazonaws.tvm.custom.DeviceAuthentication;
 import com.amazonaws.tvm.custom.UserAuthentication;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.UnsupportedEncodingException;
+import java.util.Map;
+
+import static com.amazonaws.tvm.Utilities.encode;
+import static javax.servlet.http.HttpServletResponse.*;
 
 /**
  * This class implements functions for Identity mode. Identity mode is more useful when application developer needs to track their customer and how much resources 
@@ -42,7 +37,7 @@ import com.amazonaws.tvm.custom.UserAuthentication;
  */
 public class IdentityTokenVendingMachine {
 	
-	protected static final Logger log = TokenVendingMachineLogger.getLogger();
+	protected static final Logger log = LoggerFactory.getLogger(IdentityTokenVendingMachine.class);
 	
 	/**
 	 * Verify if the token request is valid. UID is authenticated. The timestamp is checked to see it falls within the valid timestamp window. The
@@ -59,21 +54,21 @@ public class IdentityTokenVendingMachine {
 	 */
 	public int validateTokenRequest( String uid, String signature, String timestamp ) throws Exception {
 		if ( !Utilities.isTimestampValid( timestamp ) ) {
-			log.warning( "Timestamp : " + encode( timestamp ) + " not valid. Setting Http status code " + SC_REQUEST_TIMEOUT );
+			log.warn("Timestamp : " + encode(timestamp) + " not valid. Setting Http status code " + SC_REQUEST_TIMEOUT);
 			return SC_REQUEST_TIMEOUT;
 		}
 		
-		log.fine( String.format( "Timestamp [ %s ] is valid", encode( timestamp ) ) );
+		log.trace(String.format("Timestamp [ %s ] is valid", encode(timestamp)));
 		
 		DeviceAuthentication auth = new DeviceAuthentication();
 		String key = auth.getKey( uid );
 		
 		if ( !this.authenticateSignature( key, timestamp, signature ) ) {
-			log.warning( "Client signature doesnot match with server generated signature .Setting Http status code " + SC_UNAUTHORIZED );
+			log.warn("Client signature doesnot match with server generated signature .Setting Http status code " + SC_UNAUTHORIZED);
 			return SC_UNAUTHORIZED;
 		}
 		
-		log.fine( "Signature matched!!!" );
+		log.trace("Signature matched!!!");
 		return SC_OK;
 	}
 	
@@ -92,7 +87,7 @@ public class IdentityTokenVendingMachine {
 		
         String username = UserAuthentication.getUsernameFromUID( auth.getUserId( uid ) );
         if ( username == null ) {
-            log.severe( "Username not found for: " + username );            
+            log.error("Username not found for: " + username);
             return null;
         }
 
@@ -108,7 +103,7 @@ public class IdentityTokenVendingMachine {
 			log.info( "Generating session tokens for UID : " + encode( uid ) );
 			String data = Utilities.prepareJsonResponseForTokens( sessionCredentials, key );
 			if ( null == data ) {
-				log.severe( "Error generating xml response for token request" );
+				log.error( "Error generating xml response for token request" );
 				return null;
 			}
 			return data;
@@ -130,7 +125,7 @@ public class IdentityTokenVendingMachine {
 	 */
 	public int registerUser( String username, String password, String endpoint ) throws Exception {
 		if ( !Utilities.isValidUsername( username ) || !Utilities.isValidPassword( password ) ) {
-			log.warning( "Setting Http status code " + SC_BAD_REQUEST );
+			log.warn( "Setting Http status code " + SC_BAD_REQUEST );
 			return SC_BAD_REQUEST;
 		}
 		
@@ -142,7 +137,7 @@ public class IdentityTokenVendingMachine {
 			return SC_OK;
 		}
 		else {
-			log.warning( "User : " + encode( username ) + " registration failed" );
+			log.warn( "User : " + encode( username ) + " registration failed" );
 			return SC_NOT_ACCEPTABLE;
 		}
 	}
@@ -165,44 +160,44 @@ public class IdentityTokenVendingMachine {
 	 */
 	public int validateLoginRequest( String username, String uid, String signature, String timestamp ) throws Exception {
 		if ( !Utilities.isTimestampValid( timestamp ) ) {
-			log.warning( "Timestamp : " + encode( timestamp ) + " not valid. Setting Http status code " + SC_REQUEST_TIMEOUT );
+			log.warn( "Timestamp : " + encode( timestamp ) + " not valid. Setting Http status code " + SC_REQUEST_TIMEOUT );
 			return SC_REQUEST_TIMEOUT;
 		}
 		
-		log.fine( String.format( "Timestamp [ %s ] is valid", timestamp ) );
+		log.trace( String.format( "Timestamp [ %s ] is valid", timestamp ) );
 		
 		UserAuthentication authenticator = new UserAuthentication();
 		
 		// Authenticate user signature
 		String useridFromUserTable = authenticator.authenticateUserSignature( username, timestamp, signature );
 		if ( null == useridFromUserTable ) {
-			log.warning( "Client signature : " + encode( signature ) + " does not match with server generated signature. Setting Http status code " + SC_UNAUTHORIZED );
+			log.warn( "Client signature : " + encode( signature ) + " does not match with server generated signature. Setting Http status code " + SC_UNAUTHORIZED );
 			return SC_UNAUTHORIZED;
 		}
 		
-		log.fine( "Signature matched!!!" );
+		log.trace( "Signature matched!!!" );
 		
 		// Register device
 		final Map<String, String> deviceAttributes = this.regenerateKey( uid, useridFromUserTable );
 		if ( null == deviceAttributes ) {
-			log.severe( String.format( "Error registering device for UID : [ %s ] username : [ %s ] userid : [ %s ]", encode( uid ), encode( username ), encode( useridFromUserTable ) ) );
-			log.severe( "Setting response code : " + SC_INTERNAL_SERVER_ERROR );
+			log.error( String.format( "Error registering device for UID : [ %s ] username : [ %s ] userid : [ %s ]", encode( uid ), encode( username ), encode( useridFromUserTable ) ) );
+			log.error( "Setting response code : " + SC_INTERNAL_SERVER_ERROR );
 			return SC_INTERNAL_SERVER_ERROR;
 		}
 		
-		log.fine( "Device found/registered successfully!!!" );
+		log.trace( "Device found/registered successfully!!!" );
 		
 		// get device attribute
 		String useridFromDeviceTable = deviceAttributes.get( "userid" );
 		String encryptionKey = deviceAttributes.get( "key" );
 		
 		if ( null == useridFromDeviceTable || null == encryptionKey ) {
-			log.severe( String.format( "Setting Http status code : %d", SC_INTERNAL_SERVER_ERROR ) );
+			log.error( String.format( "Setting Http status code : %d", SC_INTERNAL_SERVER_ERROR ) );
 			return SC_INTERNAL_SERVER_ERROR;
 		}
 		
 		if ( !this.deviceBelongsToUser( useridFromUserTable, useridFromDeviceTable ) ) {
-			log.warning( String.format( "Userid mismatch between device table and user table. Userid from user_table : [ %s ] and userid from device_table : [ %s ]. Setting Http statuscode %d",
+			log.warn( String.format( "Userid mismatch between device table and user table. Userid from user_table : [ %s ] and userid from device_table : [ %s ]. Setting Http statuscode %d",
 					encode( useridFromUserTable ), encode( useridFromDeviceTable ), SC_UNAUTHORIZED ) );
 			return SC_UNAUTHORIZED;
 		}
@@ -231,7 +226,7 @@ public class IdentityTokenVendingMachine {
 		log.info( "Responding with encrypted key for UID : " + encode( uid ) );
 		String data = Utilities.prepareJsonResponseForKey( key, hashSaltedPassword );
 		if ( null == data ) {
-			log.severe( "Error generating json response for key request" );
+			log.error( "Error generating json response for key request" );
 		}
 		
 		return data;
@@ -290,7 +285,7 @@ public class IdentityTokenVendingMachine {
 	 */
 	private boolean authenticateSignature( String key, String timestamp, String signature ) throws Exception {
 		if ( null == key ) {
-			log.warning( "Key not found" );
+			log.warn( "Key not found" );
 			return false;
 		}
 		

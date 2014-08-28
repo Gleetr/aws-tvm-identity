@@ -19,10 +19,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.security.SecureRandom;
-import java.text.ParseException;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -34,10 +31,12 @@ import org.apache.commons.codec.binary.Hex;
 import com.amazonaws.services.securitytoken.model.Credentials;
 import com.amazonaws.util.DateUtils;
 import com.amazonaws.util.HttpUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Utilities {
 	
-	protected static final Logger log = TokenVendingMachineLogger.getLogger();
+	protected static final Logger log = LoggerFactory.getLogger(Utilities.class);
 	private static String RAW_POLICY_OBJECT = null;
 	private static SecureRandom RANDOM = new SecureRandom();
 	
@@ -78,7 +77,7 @@ public class Utilities {
 			return new String( signature );
 		}
 		catch ( Exception exception ) {
-			log.log( Level.SEVERE, "Exception during sign", exception );
+			log.error("Exception during sign", exception);
 		}
 		return null;
 	}
@@ -179,7 +178,7 @@ public class Utilities {
 				RAW_POLICY_OBJECT = baos.toString();
 			}
 			catch ( Exception exception ) {
-				log.log( Level.SEVERE, "Unable to load policy object.", exception );
+				log.error("Unable to load policy object.", exception);
 				RAW_POLICY_OBJECT = "";
 			}
 			finally {
@@ -188,7 +187,7 @@ public class Utilities {
 					in.close();
 				}
 				catch ( Exception exception ) {
-					log.log( Level.SEVERE, "Unable to close streams.", exception );
+					log.error("Unable to close streams.", exception);
 				}
 				in = null;
 				baos = null;

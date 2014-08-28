@@ -15,19 +15,18 @@
 
 package com.amazonaws.tvm;
 
-import java.util.logging.Logger;
-import java.util.logging.Level;
-
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.identitymanagement.AmazonIdentityManagementClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class captures all of the configuration settings. These environment properties are defined in the BeanStalk container configuration tab.
  */
 public class Configuration {
 	
-	protected static final Logger log = TokenVendingMachineLogger.getLogger();
+	protected static final Logger log = LoggerFactory.getLogger(Configuration.class);
 	
 	/**
 	 * The AWS Access Key Id for the AWS account from which to generate sessions.
@@ -101,7 +100,7 @@ public class Configuration {
 			return iam.getUser().getUser().getArn().split( ":" )[4];
 		}
 		catch ( Exception exception ) {
-			log.log( Level.WARNING, "Exception during getAWSAccountID", exception );
+			log.warn("Exception during getAWSAccountID", exception);
 			return null;
 		}
 	}

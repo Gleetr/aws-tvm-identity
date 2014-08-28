@@ -43,7 +43,7 @@ public class GetTokenServlet extends RootServlet {
 
 			int responseCode = identityTokenVendingMachine.validateTokenRequest( uid, signature, timestamp );
 			if ( responseCode != HttpServletResponse.SC_OK ) {
-				log.severe( "Error validating token request for UID : " + encode( uid ) );
+				log.error( "Error validating token request for UID : " + encode( uid ) );
 				super.sendErrorResponse( responseCode, response );
 				return null;
 			}
@@ -51,7 +51,7 @@ public class GetTokenServlet extends RootServlet {
 			String data = identityTokenVendingMachine.getToken( uid );
 			
 			if ( null == data ) {
-				log.severe( "Error generating session credentials for UID : " + encode( uid ) );
+				log.error( "Error generating session credentials for UID : " + encode( uid ) );
 				super.sendErrorResponse( HttpServletResponse.SC_INTERNAL_SERVER_ERROR, response );
 				return null;
 			}

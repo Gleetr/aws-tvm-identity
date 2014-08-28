@@ -16,8 +16,8 @@
 
 package com.amazonaws.tvm;
 
-import java.io.IOException;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -25,10 +25,11 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 public abstract class RootServlet extends HttpServlet {
 	
-	protected static final Logger log = TokenVendingMachineLogger.getLogger();
+	protected static final Logger log = LoggerFactory.getLogger(RootServlet.class);
 	
 	protected abstract String processRequest( HttpServletRequest request, HttpServletResponse response ) throws Exception;
 	
@@ -58,11 +59,11 @@ public abstract class RootServlet extends HttpServlet {
 	
 	protected void handleException( HttpServletRequest request, HttpServletResponse response, Exception exception ) throws Exception {
 		if ( exception instanceof com.amazonaws.tvm.MissingParameterException ) {
-			log.warning( "Missing input parameter. Setting Http status code " + HttpServletResponse.SC_BAD_REQUEST );
+			log.warn("Missing input parameter. Setting Http status code " + HttpServletResponse.SC_BAD_REQUEST);
 			this.sendErrorResponse( HttpServletResponse.SC_BAD_REQUEST, response );
 		}
 		else {
-			log.severe( "Unexpected exception: [" + exception.getMessage() + "] Setting Http status code " + HttpServletResponse.SC_INTERNAL_SERVER_ERROR );
+			log.error("Unexpected exception: [" + exception.getMessage() + "] Setting Http status code " + HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			this.sendErrorResponse( HttpServletResponse.SC_INTERNAL_SERVER_ERROR, response );
 		}
 	}
@@ -113,7 +114,7 @@ public abstract class RootServlet extends HttpServlet {
 					out.close();
 				}
 				catch ( IOException e ) {
-					log.warning( "Error closing ServletOutputStream" );
+					log.warn("Error closing ServletOutputStream");
 				}
 			}
 		}
@@ -141,7 +142,7 @@ public abstract class RootServlet extends HttpServlet {
 					out.close();
 				}
 				catch ( IOException e ) {
-					log.warning( "Error closing ServletOutputStream" );
+					log.warn("Error closing ServletOutputStream");
 				}
 			}
 		}

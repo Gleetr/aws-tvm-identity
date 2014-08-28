@@ -50,7 +50,7 @@ public class LoginServlet extends RootServlet {
 			int responseCode = identityTokenVendingMachine.validateLoginRequest( username, uid, signature, timestamp );
 			
 			if ( responseCode != HttpServletResponse.SC_OK ) {
-				log.severe( "Error validating login request for username : " + encode( username ) );
+				log.error( "Error validating login request for username : " + encode( username ) );
 				super.sendErrorResponse( responseCode, response );
 				return null;
 			}
@@ -58,7 +58,7 @@ public class LoginServlet extends RootServlet {
 			String data = identityTokenVendingMachine.getKey( username, uid );
 			
 			if ( null == data ) {
-				log.severe( "Error generating key for UID : " + encode( uid ) );
+				log.error( "Error generating key for UID : " + encode( uid ) );
 				super.sendErrorResponse( HttpServletResponse.SC_INTERNAL_SERVER_ERROR, response );
 				return null;
 			}

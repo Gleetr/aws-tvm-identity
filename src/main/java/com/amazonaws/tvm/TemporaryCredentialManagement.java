@@ -15,18 +15,17 @@
 
 package com.amazonaws.tvm;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.securitytoken.AWSSecurityTokenServiceClient;
 import com.amazonaws.services.securitytoken.model.Credentials;
 import com.amazonaws.services.securitytoken.model.GetFederationTokenRequest;
 import com.amazonaws.services.securitytoken.model.GetFederationTokenResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class TemporaryCredentialManagement {
 	
-	protected static final Logger log = TokenVendingMachineLogger.getLogger();
+	protected static final Logger log = LoggerFactory.getLogger(TemporaryCredentialManagement.class);
 	
 	public static Credentials getTemporaryCredentials( String username ) {
 		if ( ( Configuration.AWS_ACCESS_KEY_ID == null ) || ( Configuration.AWS_SECRET_KEY == null ) || username == null ) {
@@ -46,7 +45,7 @@ public class TemporaryCredentialManagement {
 				return getFederationTokenResult.getCredentials();
 			}
 			catch ( Exception exception ) {
-				log.log( Level.SEVERE, "Exception during getTemporaryCredentials", exception );
+				log.error("Exception during getTemporaryCredentials", exception);
 				return null;
 			}
 		}

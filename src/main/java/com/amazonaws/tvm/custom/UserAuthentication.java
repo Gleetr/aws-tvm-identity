@@ -17,8 +17,6 @@ package com.amazonaws.tvm.custom;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.simpledb.AmazonSimpleDBClient;
@@ -34,15 +32,16 @@ import com.amazonaws.services.simpledb.model.ReplaceableAttribute;
 import com.amazonaws.services.simpledb.model.SelectRequest;
 import com.amazonaws.services.simpledb.model.SelectResult;
 import com.amazonaws.tvm.Configuration;
-import com.amazonaws.tvm.TokenVendingMachineLogger;
 import com.amazonaws.tvm.Utilities;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class is used store and authenticate users. All users and there username/password information is stored in a SimpleDB domain.
  */
 public class UserAuthentication {
 	
-	protected static final Logger log = TokenVendingMachineLogger.getLogger();
+	protected static final Logger log = LoggerFactory.getLogger(UserAuthentication.class);
 	
 	private final AmazonSimpleDBClient sdb;
 	
@@ -116,7 +115,7 @@ public class UserAuthentication {
 			return this.authenticateUser( username, password, uri );
 		}
 		catch ( Exception exception ) {
-			log.log( Level.WARNING, "Exception during registerUser", exception );
+			log.warn("Exception during registerUser", exception);
 			return false;
 		}
 	}
@@ -214,7 +213,7 @@ public class UserAuthentication {
 			this.sdb.putAttributes( par );
 		}
 		catch ( Exception exception ) {
-			log.log( Level.WARNING, "Exception during storeUser", exception );
+			log.warn("Exception during storeUser", exception);
 		}
 	}
 	
@@ -279,7 +278,7 @@ public class UserAuthentication {
 			return ( domains.contains( domainName ) );
 		}
 		catch ( Exception exception ) {
-			log.log( Level.WARNING, "Exception during doesDomainExist", exception );
+			log.warn("Exception during doesDomainExist", exception);
 			return false;
 		}
 	}
@@ -359,14 +358,14 @@ public class UserAuthentication {
 		SelectResult result = sdbClient.select( sr );
 
         if ( result.getItems().size() == 0  ) {
-			log.log( Level.SEVERE, "No username matched for UID [" + uid + "]" );     
+			log.error("No username matched for UID [" + uid + "]");
             return null;                      
         }
         else {
             if ( result.getItems().size() != 1  ) {
-			    log.log( Level.SEVERE, "More than one username matched." );                               
+			    log.error("More than one username matched.");
     		    for ( Item item : result.getItems() ) {
-	    		    log.log( Level.WARNING, "\tMatched: " + item.getName() );
+	    		    log.warn("\tMatched: " + item.getName());
 		        }
             }
             

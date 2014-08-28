@@ -19,8 +19,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
-import java.util.logging.Level;
 
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.simpledb.AmazonSimpleDBClient;
@@ -36,15 +34,15 @@ import com.amazonaws.services.simpledb.model.ReplaceableAttribute;
 import com.amazonaws.services.simpledb.model.SelectRequest;
 import com.amazonaws.services.simpledb.model.SelectResult;
 import com.amazonaws.tvm.Configuration;
-import com.amazonaws.tvm.Constants;
-import com.amazonaws.tvm.TokenVendingMachineLogger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class is used to store and authenticate devices. All devices and their information is stored in a SimpleDB domain.
  */
 public class DeviceAuthentication {
 	
-	protected static final Logger log = TokenVendingMachineLogger.getLogger();
+	protected static final Logger log = LoggerFactory.getLogger(DeviceAuthentication.class);
 	
 	private final AmazonSimpleDBClient sdb;
 	
@@ -142,7 +140,7 @@ public class DeviceAuthentication {
 			return this.authenticateDevice( uid, key );
 		}
 		catch ( Exception exception ) {
-			log.log( Level.WARNING, "Exception during registerDevice", exception );
+			log.warn("Exception during registerDevice", exception);
 			return false;
 		}
 	}
@@ -205,7 +203,7 @@ public class DeviceAuthentication {
 			this.sdb.putAttributes( par );
 		}
 		catch ( Exception exception ) {
-			log.log( Level.WARNING, "Exception during storeDevice", exception );
+			log.warn("Exception during storeDevice", exception);
 		}
 	}
 	
@@ -316,7 +314,7 @@ public class DeviceAuthentication {
 			return ( domains.contains( domainName ) );
 		}
 		catch ( Exception exception ) {
-			log.log( Level.WARNING, "Exception during doesDomainExist", exception );
+			log.warn("Exception during doesDomainExist", exception);
 			return false;
 		}
 	}

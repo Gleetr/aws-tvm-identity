@@ -42,7 +42,7 @@ Gentle reminder: use SSL. Please.
 
 WARNING: you absolutely need to use the fully qualified server name you used in the clients to call the REST API. In the following examples, we'll be using
 localhost for easy copy/paste but this will result in the passwords being hashed using 'localhost' in the seed... And when you'll run this in production,
-authentication won't work with the users you created using this method. So please understand this.
+authentication won't work with the users you created using this method. This is a feature/limitation in the original code.
 
 ### List All Users
 	$ curl http://admin:admin@localhost:8080/management/user/list

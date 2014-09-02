@@ -80,24 +80,30 @@ public class DeviceAuthentication {
 	/**
 	 * @return the list of device ID (UID) stored in the identity domain.
 	 */
-	public List<String> listDevices() {
-		List<String> users = new ArrayList<String>( 1000 );
+    public List<String> listDevices() {
+        List<String> devices = new ArrayList<String>();
 
-        SelectResult result = null;
+        String nextToken = null;
         do {
-            SelectRequest sr = new SelectRequest( SELECT_DEVICE_EXPRESSION, Boolean.TRUE );
-            result = this.sdb.select( sr );
+            SelectRequest selectRequest = new SelectRequest(SELECT_DEVICE_EXPRESSION);
+            selectRequest.setConsistentRead(true);
 
-            for ( Item item : result.getItems() ) {
-                users.add( item.getName() );
+            if (nextToken != null) {
+                selectRequest.setNextToken(nextToken);
             }
-        }
-        while ( result != null && result.getNextToken() != null );
 
-		return users;
-	}
-	
-	/**
+            SelectResult result = sdb.select(selectRequest);
+            for (Item item : result.getItems()) {
+                devices.add(item.toString());
+            }
+
+            nextToken = result.getNextToken();
+        } while (nextToken != null);
+
+        return devices;
+    }
+
+    /**
 	 * Returns device attributes for given device ID (UID)
 	 * 
 	 * @param uid

@@ -79,24 +79,30 @@ public class UserAuthentication {
 	 * 
 	 * @return list of existing usernames in SimpleDB domain
 	 */
-	public List<String> listUsers() {
-		List<String> users = new ArrayList<String>( 1000 );
-		
-		SelectResult result = null;
-		do {
-			SelectRequest sr = new SelectRequest( SELECT_USERS_EXPRESSION, Boolean.TRUE );
-			result = this.sdb.select( sr );
-			
-			for ( Item item : result.getItems() ) {
-				users.add( item.getName() );
-			}
-		}
-		while ( result != null && result.getNextToken() != null );
-		
-		return users;
-	}
-	
-	/**
+    public List<String> listUsers() {
+        List<String> users = new ArrayList<String>();
+
+        String nextToken = null;
+        do {
+            SelectRequest selectRequest = new SelectRequest(SELECT_USERS_EXPRESSION);
+            selectRequest.setConsistentRead(true);
+
+            if (nextToken != null) {
+                selectRequest.setNextToken(nextToken);
+            }
+
+            SelectResult result = sdb.select(selectRequest);
+            for (Item item : result.getItems()) {
+                users.add(item.getName());
+            }
+
+            nextToken = result.getNextToken();
+        } while (nextToken != null);
+
+        return users;
+    }
+
+    /**
 	 * Attempts to register the username, password combination. Checks if username not already exist. Returns true if successful, false otherwise.
 	 * 
 	 * @param username

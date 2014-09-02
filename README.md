@@ -66,6 +66,21 @@ authentication won't work with the users you created using this method. This is 
 	$ curl http://admin:admin@localhost:8080/management/user/count
 	2
 
+### Debug API
+#### Dump all user records
+$ curl http://admin:admin@localhost:8080/management/debug/user
+{Name: pierre,Attributes: [{Name: enabled,Value: true,}, {Name: userid,Value: 2d956dd0433e5bc00a3dbfd8e521d14d,}, {Name: hash_salted_password,Value: 9b884f64593947bda2cad125e415e1a76ba98893c8bc24166a33424e71eced32,}]}
+{Name: nicolas,Attributes: [{Name: enabled,Value: true,}, {Name: userid,Value: 5bfc951ae93f2ed258d828f147448f7c,}, {Name: hash_salted_password,Value: c4144562c9451b881b1ebefd647b7fee7e38459db2e5de4cccf665c31a93d44b,}]}
+
+#### Dump all device records
+$ curl http://admin:admin@localhost:8080/management/debug/device
+{Name: 9b0c122adfef83c9b8c2a9504f80e825,Attributes: [{Name: userid,Value: 5bfc951ae93f2ed258d828f147448f7c,}, {Name: key,Value: 349d8e3b6a7233949fd98bb94ae2a1a5,}]}
+{Name: 13250eb2-afcf-4e6a-a88d-86cd17aba1a4,Attributes: [{Name: userid,Value: 2d956dd0433e5bc00a3dbfd8e521d14d,}, {Name: key,Value: 1f82407853fb620f54fae71f70ea908e,}]}
+
+#### Dump all SimpleDB domains
+$ curl http://admin:admin@localhost:8080/management/debug/domain
+[TokenVendingMachine_myapp_DEVICES, TokenVendingMachine_myapp_USERS]
+
 ### TODO
 Enable/disable an user:
 

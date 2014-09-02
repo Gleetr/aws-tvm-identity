@@ -64,7 +64,7 @@ public class DeviceAuthentication {
 	/**
 	 * Constant select expression used to list all the identities stored in the Domain.
 	 */
-	private final static String SELECT_DEVICE_EXPRESSION = "select * from " + IDENTITY_DOMAIN;
+	private final static String SELECT_DEVICE_EXPRESSION = "select * from `" + IDENTITY_DOMAIN + "`";;
 	
 	/**
 	 * Looks up domain name and creates one if it doesnot exist
@@ -82,15 +82,18 @@ public class DeviceAuthentication {
 	 */
 	public List<String> listDevices() {
 		List<String> users = new ArrayList<String>( 1000 );
-		
-		SelectResult result = null;
-		SelectRequest sr = new SelectRequest( SELECT_DEVICE_EXPRESSION, Boolean.TRUE );
-		result = this.sdb.select( sr );
-		
-		for ( Item item : result.getItems() ) {
-			users.add( item.getName() );
-		}
-		
+
+        SelectResult result = null;
+        do {
+            SelectRequest sr = new SelectRequest( SELECT_DEVICE_EXPRESSION, Boolean.TRUE );
+            result = this.sdb.select( sr );
+
+            for ( Item item : result.getItems() ) {
+                users.add( item.getName() );
+            }
+        }
+        while ( result != null && result.getNextToken() != null );
+
 		return users;
 	}
 	

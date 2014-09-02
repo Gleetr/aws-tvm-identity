@@ -93,7 +93,7 @@ public class UserAuthentication {
 
             SelectResult result = sdb.select(selectRequest);
             for (Item item : result.getItems()) {
-                users.add(item.getName());
+                users.add(item.toString());
             }
 
             nextToken = result.getNextToken();
